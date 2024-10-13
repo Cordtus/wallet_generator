@@ -69,9 +69,8 @@ yarn start
 
 The tool will output:
 
-- **Sei Address**
-- **Osmosis Address**
-- **Ethereum Address**
+- **Bech32 Address**
+- **Ethereum (hex) Address**
 - **Public Key**
 - **Private Key**
 
@@ -86,9 +85,8 @@ yarn start
 
 The tool will output:
 
-- **Sei Address**
-- **Osmosis Address**
-- **Ethereum Address**
+- **Bech32 Address**
+- **Ethereum (hex) Address**
 - **Public Key**
 
 #### Generating from a Public Key:
@@ -102,8 +100,7 @@ yarn start
 
 The tool will output:
 
-- **Sei Address**
-- **Osmosis Address**
+- **Bech32 Address**
 - **Ethereum Address**
 
 ## License
