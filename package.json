@@ -1,0 +1,32 @@
+{
+  "name": "wallet_generator",
+  "version": "2.0.0",
+  "description": "Generate keys+wallet addresses from mnemonic, accepts arbitrary HDpath",
+  "main": "dist/final_interactive.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsc && node dist/final_interactive.js",
+    "lint": "eslint . --ext .ts"
+  },
+  "author": "Cordt Handon",
+  "license": "MIT",
+  "dependencies": {
+    "@cosmjs/encoding": "^0.26.0",
+    "@noble/curves": "^1.0.0",
+    "@noble/hashes": "^1.5.0",
+    "@scure/bip32": "^1.5.0",
+    "bech32": "^2.0.0",
+    "bip32": "^5.0.0-rc.0",
+    "bip39": "^3.1.0",
+    "dotenv-flow": "^3.2.0",
+    "inquirer": "^8.2.4",
+    "tiny-secp256k1": "^2.2.3"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^8.2.4",
+    "@types/node": "^20.14.12",
+    "eslint": "^8.0.0",
+    "typescript": "^4.0.0"
+  }
+}
