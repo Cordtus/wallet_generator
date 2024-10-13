@@ -3,7 +3,7 @@ import { ripemd160 } from '@noble/hashes/ripemd160';
 import { keccak_256 } from '@noble/hashes/sha3';
 import { secp256k1 } from '@noble/curves/secp256k1';
 import { bech32 } from 'bech32';
-import { mnemonicToSeedSync } from 'bip39';
+import { mnemonicToSeedSync, validateMnemonic } from 'bip39';
 import { BIP32Factory } from 'bip32';
 import * as ecc from 'tiny-secp256k1';
 import inquirer from 'inquirer';
@@ -12,7 +12,7 @@ import inquirer from 'inquirer';
 const bip32 = BIP32Factory(ecc);
 
 // Convert bits for Bech32 encoding
-function convertBits(data: Uint8Array, fromBits: number, toBits: number, pad: boolean): number[] {
+export function convertBits(data: Uint8Array, fromBits: number, toBits: number, pad: boolean): number[] {
     let acc = 0;
     let bits = 0;
     const result: number[] = [];
@@ -36,7 +36,7 @@ function convertBits(data: Uint8Array, fromBits: number, toBits: number, pad: bo
 }
 
 // Generate addresses from a public key
-function generateAddressesFromPublicKey(publicKeyBytes: Uint8Array, prefix: string): { address: string } {
+export function generateAddressesFromPublicKey(publicKeyBytes: Uint8Array, prefix: string): { address: string } {
     const sha256Digest = sha256(publicKeyBytes);
     const ripemd160Digest = ripemd160(sha256Digest);
     const fiveBitArray = convertBits(ripemd160Digest, 8, 5, true);
@@ -46,7 +46,7 @@ function generateAddressesFromPublicKey(publicKeyBytes: Uint8Array, prefix: stri
 }
 
 // Generate addresses and return public/private keys
-function generateAddressesFromPrivateKey(privateKeyHex: string, prefix: string): { address: string, ethAddress: string, publicKey: string, privateKey: string } {
+export function generateAddressesFromPrivateKey(privateKeyHex: string, prefix: string): { address: string, ethAddress: string, publicKey: string, privateKey: string } {
     const privateKey = Uint8Array.from(Buffer.from(privateKeyHex.padStart(64, '0'), 'hex'));
     if (privateKey.length !== 32) {
         throw new Error('Private key must be 32 bytes long.');
@@ -68,14 +68,21 @@ function generateAddressesFromPrivateKey(privateKeyHex: string, prefix: string):
 }
 
 // Generate private key from mnemonic using BIP44 derivation path
-function getPrivateKeyFromMnemonic(mnemonic: string, derivationPath: string): Uint8Array {
+export function getPrivateKeyFromMnemonic(mnemonic: string, derivationPath: string): Uint8Array {
+    // Validate mnemonic before proceeding
+    if (!validateMnemonic(mnemonic)) {
+        throw new Error(`Invalid mnemonic: ${mnemonic}`);
+    }
+
     const seed = mnemonicToSeedSync(mnemonic);
     const hdwallet = bip32.fromSeed(seed);
     const derivedNode = hdwallet.derivePath(derivationPath);
     const privateKey = derivedNode.privateKey;
+
     if (!privateKey) {
         throw new Error('Unable to derive private key from mnemonic and path.');
-    }
+    } 
+
     return privateKey;
 }
 
