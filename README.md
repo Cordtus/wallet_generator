@@ -33,6 +33,7 @@ yarn install
 
 ```bash
 yarn build
+```
 
 4. Test:
 
@@ -40,7 +41,7 @@ yarn build
 yarn test
 ```
 
-4. Run:
+5. Run:
 
 ```bash
 yarn start
