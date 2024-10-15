@@ -108,13 +108,13 @@ async function promptUser(): Promise<void> {
                 type: 'input',
                 name: 'derivationPath',
                 message: 'Enter the derivation path (e.g., m/44\'/118\'/0\'/0/0 for Cosmos):',
-                                                                           default: "m/44'/118'/0'/0/0",
+                default: "m/44'/118'/0'/0/0",
             },
             {
                 type: 'input',
                 name: 'prefix',
                 message: 'Enter the Bech32 prefix (e.g., sei, osmo):',
-                                                                           default: 'sei',
+                default: 'sei',
             },
         ]);
 
@@ -126,9 +126,45 @@ async function promptUser(): Promise<void> {
         console.log(`Private Key: ${privKey}`);
         console.log(`Public Key: ${publicKey}`);
     } else if (mode === 'Private Key') {
-        // Handle private key input similarly
+        const { privateKey, prefix } = await inquirer.prompt([
+            {
+                type: 'input',
+                name: 'privateKey',
+                message: 'Enter your private key (hex format):',
+            },
+            {
+                type: 'input',
+                name: 'prefix',
+                message: 'Enter the Bech32 prefix (e.g., sei, osmo):',
+                default: 'sei',
+            },
+        ]);
+
+        const { address, ethAddress, publicKey, privateKey: privKey } = generateAddressesFromPrivateKey(privateKey, prefix);
+
+        console.log(`${prefix.charAt(0).toUpperCase() + prefix.slice(1)} Address: ${address}`);
+        console.log(`Ethereum Address: ${ethAddress}`);
+        console.log(`Private Key: ${privKey}`);
+        console.log(`Public Key: ${publicKey}`);
     } else if (mode === 'Public Key') {
-        // Handle public key input similarly
+        const { publicKey, prefix } = await inquirer.prompt([
+            {
+                type: 'input',
+                name: 'publicKey',
+                message: 'Enter your public key (hex format):',
+            },
+            {
+                type: 'input',
+                name: 'prefix',
+                message: 'Enter the Bech32 prefix (e.g., sei, osmo):',
+                default: 'sei',
+            },
+        ]);
+
+        const publicKeyBytes = Uint8Array.from(Buffer.from(publicKey, 'hex'));
+        const { address } = generateAddressesFromPublicKey(publicKeyBytes, prefix);
+
+        console.log(`${prefix.charAt(0).toUpperCase() + prefix.slice(1)} Address: ${address}`);
     }
 }
 
