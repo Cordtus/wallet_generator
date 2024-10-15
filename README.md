@@ -76,7 +76,6 @@ The tool will output:
 
 #### Generating from a Private Key:
 
-##### WIP - not fully implemented 
 
 ```bash
 yarn start
@@ -93,7 +92,6 @@ The tool will output:
 
 #### Generating from a Public Key:
 
-##### WIP - not fully implemented 
 
 ```bash
 yarn start
