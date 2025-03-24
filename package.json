@@ -1,6 +1,6 @@
 {
 	"name": "wallet_generator",
-	"version": "3.0.0",
+	"version": "3.0.1",
 	"description": "Generate keys+wallet addresses from mnemonic, accepts arbitrary HDpath",
 	"main": "dist/final_interactive.js",
 	"type": "module",

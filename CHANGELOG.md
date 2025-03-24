@@ -1,5 +1,9 @@
 # Changelog
 
+## <small>3.0.1 (2025-03-24)</small>
+
+* fix(general): fixed hd path input validation, improved pk and pubkey validation ([eee66d9](https://github.com/cordtus/wallet_generator/commit/eee66d9))
+
 ## 3.0.0 (2025-03-24)
 
 * fix(build): cleanup ([3f65b3d](https://github.com/cordtus/wallet_generator/commit/3f65b3d))
