@@ -5,9 +5,10 @@
 	"main": "dist/final_interactive.js",
 	"type": "module",
 	"scripts": {
-		"build": "bun build src/index.ts --outdir dist",
-		"start": "bun run src/index.ts",
-		"lint": "bun eslint ./ --fix",
+		"build": "bun build src/index.ts --outdir dist --target node",
+		"dev": "bun run src/index.ts",
+		"start": "bun run dist/index.js",
+		"lint": "bun biome check --fix",
 		"test": "bun test --detectOpenHandles",
 		"prepare": "mise install && husky",
 		"release:major": "HUSKY=0 release-it major",
@@ -75,6 +76,7 @@
 	"author": "Cordt Hanson",
 	"license": "MIT",
 	"dependencies": {
+		"@bitcoinerlab/secp256k1": "^1.2.0",
 		"@commitlint/cli": "^19.8.0",
 		"@commitlint/config-conventional": "^19.8.0",
 		"@cosmjs/encoding": "0.33.1",
@@ -86,7 +88,6 @@
 		"bip32": "^5.0.0-rc.0",
 		"bip39": "3.1.0",
 		"dotenv-flow": "4.1.0",
-		"tiny-secp256k1": "2.2.3",
 		"zod": "^3.24.2"
 	},
 	"devDependencies": {
