@@ -1,0 +1,4 @@
+{
+	"src/**/*.{js,ts}": ["bun biome check --fix"],
+	"src/**/*.{json,md}": ["bun biome check --fix"]
+}

@@ -1,0 +1,75 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git",
+		"useIgnoreFile": true
+	},
+	"files": {
+		"ignoreUnknown": false,
+		"ignore": []
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab"
+	},
+	"organizeImports": {
+		"enabled": true
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"correctness": {
+				"noConstantMathMinMaxClamp": "error",
+				"noUndeclaredVariables": "error",
+				"noUnusedImports": "error",
+				"noUnusedFunctionParameters": "error",
+				"noUnusedPrivateClassMembers": "error",
+				"useExhaustiveDependencies": {
+					"level": "error",
+					"options": {
+						"reportUnnecessaryDependencies": false
+					}
+				},
+				"noUnusedVariables": "error",
+				"useArrayLiterals": "error"
+			},
+			"style": {
+				"noParameterProperties": "error",
+				"noYodaExpression": "error",
+				"useConsistentBuiltinInstantiation": "error",
+				"useFragmentSyntax": "error",
+				"useShorthandAssign": "error"
+			},
+			"suspicious": {
+				"useAwait": "error",
+				"noEvolvingTypes": "error"
+			},
+			"complexity": {
+				"noUselessStringConcat": "error",
+				"noUselessUndefinedInitialization": "error",
+				"noVoid": "error",
+				"useDateNow": "error"
+			}
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"arrowParentheses": "always",
+			"quoteStyle": "double",
+			"bracketSameLine": false,
+			"semicolons": "asNeeded",
+			"bracketSpacing": true,
+			"trailingCommas": "none",
+			"quoteProperties": "asNeeded",
+			"enabled": true,
+			"attributePosition": "auto",
+			"indentWidth": 3,
+			"indentStyle": "tab",
+			"jsxQuoteStyle": "double",
+			"lineEnding": "lf",
+			"lineWidth": 100
+		}
+	}
+}

@@ -1,37 +1,102 @@
 {
-  "name": "wallet_generator",
-  "version": "2.1.0",
-  "description": "Generate keys+wallet addresses from mnemonic, accepts arbitrary HDpath",
-  "main": "dist/final_interactive.js",
-  "type": "module",
-  "scripts": {
-    "build": "tsc",
-    "start": "tsc && node dist/genWallet.js",
-    "lint": "eslint . --ext .ts",
-    "test": "jest --detectOpenHandles"
-  },
-  "author": "Cordt Hanson",
-  "license": "MIT",
-  "dependencies": {
-    "@cosmjs/encoding": "^0.26.0",
-    "@noble/curves": "^1.0.0",
-    "@noble/hashes": "^1.5.0",
-    "@scure/bip32": "^1.5.0",
-    "bech32": "^2.0.0",
-    "bip32": "^5.0.0-rc.0",
-    "bip39": "^3.1.0",
-    "dotenv-flow": "^3.2.0",
-    "inquirer": "^8.2.4",
-    "tiny-secp256k1": "^2.2.3"
-  },
-  "devDependencies": {
-    "@types/inquirer": "^8.2.4",
-    "@types/jest": "^29.5.13",
-    "@types/node": "^20.14.12",
-    "eslint": "^8.0.0",
-    "jest": "^29.7.0",
-    "jest-mock": "^29.7.0",
-    "ts-jest": "^29.2.5",
-    "typescript": "^4.0.0"
-  }
+	"name": "wallet_generator",
+	"version": "3.0.1",
+	"description": "Generate keys+wallet addresses from mnemonic, accepts arbitrary HDpath",
+	"main": "dist/final_interactive.js",
+	"type": "module",
+	"scripts": {
+		"build": "bun build src/index.ts --outdir dist --target node",
+		"dev": "bun run src/index.ts",
+		"start": "bun run dist/index.js",
+		"lint": "bun biome check --fix",
+		"test": "bun test --detectOpenHandles",
+		"prepare": "mise install && husky",
+		"release:major": "HUSKY=0 release-it major",
+		"release:minor": "HUSKY=0 release-it minor",
+		"release:patch": "HUSKY=0 release-it patch"
+	},
+	"config": {
+		"commitizen": {
+			"path": "./node_modules/cz-conventional-changelog"
+		}
+	},
+	"bugs": {
+		"url": "https://github.com/cordtus/wallet_generator/issues"
+	},
+	"release-it": {
+		"github": {
+			"release": true
+		},
+		"npm": {
+			"publish": false
+		},
+		"plugins": {
+			"@release-it/conventional-changelog": {
+				"infile": "CHANGELOG.md",
+				"preset": {
+					"name": "conventionalcommits",
+					"types": [
+						{
+							"section": "Features",
+							"type": "feat"
+						},
+						{
+							"section": "Bug Fixes",
+							"type": "fix"
+						},
+						{
+							"section": "Refactor",
+							"type": "refactor"
+						},
+						{
+							"section": "Performance",
+							"type": "perf"
+						},
+						{
+							"section": "Docs",
+							"type": "docs"
+						},
+						{
+							"section": "Chore",
+							"type": "chore"
+						},
+						{
+							"section": "Tests",
+							"type": "test"
+						}
+					]
+				}
+			}
+		}
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/cordtus/wallet_generator.git"
+	},
+	"author": "Cordt Hanson",
+	"license": "MIT",
+	"dependencies": {
+		"@bitcoinerlab/secp256k1": "1.2.0",
+		"@cosmjs/encoding": "0.33.1",
+		"@inquirer/prompts": "7.4.0",
+		"@noble/curves": "1.8.1",
+		"@noble/hashes": "1.7.1",
+		"bech32": "2.0.0",
+		"bip32": "5.0.0-rc.0",
+		"bip39": "3.1.0",
+		"zod": "3.24.2"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.9.4",
+		"@release-it/conventional-changelog": "10.0.0",
+		"@types/bun": "1.2.5",
+		"commitizen": "4.3.1",
+		"cz-conventional-changelog": "3.3.0",
+		"husky": "9.1.7",
+		"lint-staged": "15.5.0",
+		"release-it": "18.1.2",
+		"typescript": "5.8.2",
+		"@commitlint/cli": "19.8.0",
+		"@commitlint/config-conventional": "19.8.0"
+	}
 }
