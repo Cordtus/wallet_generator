@@ -10,7 +10,13 @@ export const getPrivateKeyFromMnemonic = (mnemonic: string, derivationPath: stri
 	}
 	const seed = mnemonicToSeedSync(mnemonic)
 	const hdwallet = bip32.fromSeed(seed)
-	const derivedNode = hdwallet.derivePath(derivationPath)
+
+	let path = derivationPath.trim()
+	if (path.startsWith("(") && path.endsWith(")")) {
+		path = path.slice(1, -1).trim()
+	}
+
+	const derivedNode = hdwallet.derivePath(path)
 	const privateKey = derivedNode.privateKey
 	if (!privateKey) {
 		throw new Error("Unable to derive private key from mnemonic and path.")
