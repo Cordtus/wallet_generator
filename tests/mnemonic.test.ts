@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test"
 import { getPrivateKeyFromMnemonic } from "../src/utils/mnemonic"
-import { mnemonicSchema, derivationPathSchema } from "../src/utils/schema"
+import { derivationPathSchema, mnemonicSchema } from "../src/utils/schema"
 
 describe("getPrivateKeyFromMnemonic", () => {
 	it("should derive a private key from a valid mnemonic", () => {

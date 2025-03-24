@@ -3,7 +3,7 @@ import {
 	generateAddressesFromPrivateKey,
 	generateAddressesFromPublicKey
 } from "../src/utils/crypto"
-import { publicKeySchema, privateKeySchema, prefixSchema } from "../src/utils/schema"
+import { prefixSchema, privateKeySchema, publicKeySchema } from "../src/utils/schema"
 
 describe("generateAddressesFromPublicKey", () => {
 	it("should generate a valid Bech32 address", () => {
