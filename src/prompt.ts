@@ -92,14 +92,16 @@ export const promptUser = async (): Promise<void> => {
 
 		// Determine if this is likely a base64 encoded key and convert if needed
 		let publicKeyHex = publicKeyInput
-		
+
 		if (isLikelyBase64(publicKeyInput)) {
 			try {
 				publicKeyHex = base64ToHex(publicKeyInput)
 				console.log(`Detected base64 format, converted to hex: ${publicKeyHex}`)
 			} catch (error) {
-				// If conversion fails, try to use the original input
-				console.error("Error: Failed to convert from base64, trying original input")
+				console.error(
+					"Error: Failed to convert from base64, trying original input. Details:",
+					error
+				)
 			}
 		}
 
