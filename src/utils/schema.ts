@@ -112,9 +112,9 @@ export const derivationPathSchema = z.string().superRefine((m, ctx) => {
 // Prefix schema: only allow lowercase letters a-z (no numbers)
 export const prefixSchema = z
 	.string()
-	.regex(/^[a-z]+$/, "Prefix must contain only lowercase letters a-z")
+	.regex(/^[a-z]+$/, "Error: Prefix must contain only lowercase letters a-z")
 
-// Private key: hex string of exactly 64 characters
+// Private key: 32 byte hex string (64 characters)
 export const privateKeySchema = z
 	.string()
 	.regex(/^[0-9a-fA-F]+$/, "Private key must be a hex string")
@@ -122,21 +122,49 @@ export const privateKeySchema = z
 		if (key.length !== 64) {
 			ctx.addIssue({
 				code: z.ZodIssueCode.custom,
-				message: "Private key must be exactly 64 characters long"
+				message: `Error: Privkey (hex) Invalid - expected length: 64, got: ${key.length}`
 			})
 		}
 	})
 
-// Public key: hex string of 66 (compressed) or 130 (uncompressed) characters
-export const publicKeySchema = z
-	.string()
-	.regex(/^[0-9a-fA-F]+$/, "Public key must be a hex string")
-	.superRefine((key, ctx) => {
+// Public key: hex string, length: 66 (compressed) or 130 (uncompressed)
+// OR valid pubkey bytes as a base64 encoded string
+export const publicKeySchema = z.string().superRefine((key, ctx) => {
+	// Check if it's a hex string
+	if (/^[0-9a-fA-F]+$/.test(key)) {
 		if (!(key.length === 66 || key.length === 130)) {
 			ctx.addIssue({
 				code: z.ZodIssueCode.custom,
 				message:
-					"Public key must be either 66 (compressed) or 130 (uncompressed) hex characters long"
+					`Error: Pubkey (hex) invalid  - expected length: 66 or 130, got : ${key.length}`
 			})
 		}
-	})
+		return key
+	}
+	
+	// Validate base64 string
+	try {
+
+		if (!/^[A-Za-z0-9+/=]+$/.test(key)) {
+			throw new Error("Error: Not a valid base64 string")
+		}
+		
+		// Attempt to decode the base64 string
+		const decoded = Buffer.from(key, "base64").toString("hex")
+		
+		// The decoded hex should be the right length for a public key
+		if (!(decoded.length === 66 || decoded.length === 130)) {
+			ctx.addIssue({
+				code: z.ZodIssueCode.custom,
+				message: `Error: Decoded key invalid - expected length - 66 or 130, got: ${decoded.length}`
+			})
+		}
+		
+		return decoded
+	} catch (error) {
+		ctx.addIssue({
+			code: z.ZodIssueCode.custom,
+			message: "Error: Public key must be valid hex string, or base64 encoded version of the same"
+		})
+	}
+})
