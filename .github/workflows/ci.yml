@@ -7,21 +7,28 @@ on:
   pull_request:
 
 jobs:
-  build:
+  lint-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Install Node.js (Latest LTS)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20  # Ensures Node >= 18
 
       - name: Install Bun
         uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
 
-      - name: Verify Bun installation
-        run: bun -v
+      - name: Verify Installations
+        run: |
+          node -v
+          bun -v
 
-      - name: Install dependencies
+      - name: Install Dependencies with Bun
         run: bun install
 
       - name: Run Lint
@@ -32,4 +39,3 @@ jobs:
 
       - name: Build Project
         run: bun run build
-    
