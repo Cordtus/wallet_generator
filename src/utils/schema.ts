@@ -129,43 +129,37 @@ export const privateKeySchema = z
 
 // Public key: hex string, length: 66 (compressed) or 130 (uncompressed)
 // OR valid pubkey bytes as a base64 encoded string
-export const publicKeySchema = z
-	.string()
-	.regex(/^[0-9a-fA-F]+$/, "Public key must be a hex string")
-	.superRefine((key, ctx) => {
-		if (!(key.length === 66 || key.length === 130)) {
-			ctx.addIssue({
-				code: z.ZodIssueCode.custom,
-				message:
-					`Error: Pubkey (hex) invalid  - expected length: 66 or 130, got : ${key.length}`
-			})
-		}
-		return key
-	}
-	
+export const publicKeySchema = z.string().superRefine((key, ctx) => {
+	// First, validate if the input is a valid hex string of length 66 or 130
+	const isHex = /^[0-9a-fA-F]+$/.test(key) && (key.length === 66 || key.length === 130)
+	if (isHex) return // If valid hex, no need for further validation
+
 	// Validate base64 string
 	try {
-
+		// Check if the input follows base64 character set
 		if (!/^[A-Za-z0-9+/=]+$/.test(key)) {
 			throw new Error("Error: Not a valid base64 string")
 		}
-		
+
 		// Attempt to decode the base64 string
 		const decoded = Buffer.from(key, "base64").toString("hex")
-		
+
 		// The decoded hex should be the right length for a public key
 		if (!(decoded.length === 66 || decoded.length === 130)) {
 			ctx.addIssue({
 				code: z.ZodIssueCode.custom,
-				message: `Error: Decoded key invalid - expected length - 66 or 130, got: ${decoded.length}`
+				message: `Error: Decoded key invalid - expected length 66 or 130, got: ${decoded.length}`
 			})
 		}
-		
-		return decoded
-	} catch (error) {
+	} catch (_error) {
+		// Log the error for debugging purposes
+		console.error("Public key parsing error:", _error)
+
+		// Add an issue to the validation context if the input is neither valid hex nor valid base64
 		ctx.addIssue({
 			code: z.ZodIssueCode.custom,
-			message: "Error: Public key must be valid hex string, or base64 encoded version of the same"
+			message:
+				"Error: Public key must be a valid hex string or a base64-encoded version of the same"
 		})
 	}
 })
