@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  ci-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install mise
+        run: |
+          curl -fsSL https://mise.jdx.dev/install.sh | bash
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          mise --version
+      - name: Install Node.js (Latest LTS)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Verify Installations
+        run: |
+          node -v
+          bun -v
+          mise --version
+
+      - name: Install Dependencies with Bun
+        run: |
+          rm -f yarn.lock .yarnrc.yml # Ensure no Yarn-related files
+          bun install --no-save
+
+      - name: Run Lint
+        run: bun run lint
+
+      - name: Run Tests
+        run: bun run test
+
+      - name: Build Project
+        run: bun run build
