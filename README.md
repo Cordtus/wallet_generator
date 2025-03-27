@@ -10,7 +10,7 @@ Stop it. Be better.
 
 - Generate **private keys**, **public keys**, and **wallet addresses** from a **mnemonic seed**.
 - Generate **public keys** and **wallet addresses** from a **private key**.
-- Generate **wallet addresses** from a **public key**.
+- Generate **wallet addresses** from a **public key** (supports both hex and base64 formats).
 - Accept **arbitrary HD derivation paths**.
 - Generate addresses for **Cosmos SDK chains** (Bech32) and **Ethereum** (Hex format).
 
@@ -53,7 +53,7 @@ When you run the tool, you'll be prompted to select an input mode:
 
 1. **Mnemonic**: Generate private key, public key, and wallet addresses from a mnemonic seed.
 2. **Private Key**: Generate public key and wallet addresses from a private key.
-3. **Public Key**: Generate wallet addresses from a public key.
+3. **Public Key (Hex or Base64)**: Generate wallet addresses from a public key.
 
 ### Example Usage
 
@@ -76,7 +76,6 @@ The tool will output:
 
 #### Generating from a Private Key:
 
-
 ```bash
 yarn start
 
@@ -92,18 +91,34 @@ The tool will output:
 
 #### Generating from a Public Key:
 
-
 ```bash
 yarn start
 
-✔ Select input mode: Public Key
-✔ Enter your public key: [your public key here]
+✔ Select input mode: Public Key (Hex or Base64)
+✔ Enter your public key: [your public key in hex or base64 format]
 ```
 
 The tool will output:
 
 - **Bech32 Address**
-- **Ethereum Address**
+- **Ethereum Address** (only when using hex format)
+
+### Public Key Format Examples
+
+Hex format (compressed):
+```
+033303c7d61c8e8582de6ed52e6227408eb957abc98ef5759514cdac1bb5cd0a42
+```
+
+Base64 format (same key):
+```
+AzMDx9YcjoWC3m7VLmInQI65V6vJjvV1lRTNrBu1zQpC
+```
+
+## Contributors
+
+- **Cordt Hanson** - Creator / maintainer
+- **Marius Modlich** - Major contributor
 
 ## License
 
