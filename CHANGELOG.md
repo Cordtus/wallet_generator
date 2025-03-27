@@ -1,5 +1,20 @@
 # Changelog
 
+## <small>3.0.2 (2025-03-27)</small>
+
+* fix(corrects  presvious non use of linter): very dumb was fixed ([9d57c47](https://github.com/cordtus/wallet_generator/commit/9d57c47))
+* fix(various): fix numerous errors cause by PEBCAK ([24e2802](https://github.com/cordtus/wallet_generator/commit/24e2802))
+* add handling for base64 pubkey, clarified some error msgs ([0adfd6f](https://github.com/cordtus/wallet_generator/commit/0adfd6f))
+* Update ci.yml ([82f2c77](https://github.com/cordtus/wallet_generator/commit/82f2c77))
+* Update ci.yml ([4bb4fe0](https://github.com/cordtus/wallet_generator/commit/4bb4fe0))
+* Update ci.yml ([83c4d3c](https://github.com/cordtus/wallet_generator/commit/83c4d3c))
+* update readme ([8209170](https://github.com/cordtus/wallet_generator/commit/8209170))
+* Update schema.ts ([7efad03](https://github.com/cordtus/wallet_generator/commit/7efad03))
+* ci: adds workflow file for real ([0e82292](https://github.com/cordtus/wallet_generator/commit/0e82292))
+* ci: fix ([c190457](https://github.com/cordtus/wallet_generator/commit/c190457))
+* ci(fix workflow): use bun, no yarn ([556cd1c](https://github.com/cordtus/wallet_generator/commit/556cd1c))
+* ci(github-actions): ci-lint ([09902dd](https://github.com/cordtus/wallet_generator/commit/09902dd))
+
 ## <small>3.0.1 (2025-03-24)</small>
 
 * fix(general): fixed hd path input validation, improved pk and pubkey validation ([eee66d9](https://github.com/cordtus/wallet_generator/commit/eee66d9))
