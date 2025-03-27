@@ -16,8 +16,7 @@ jobs:
       - name: Install Node.js (Latest LTS)
         uses: actions/setup-node@v4
         with:
-          node-version: 20  # Ensures Node >= 18
-
+          node-version: 20
       - name: Install Bun
         uses: oven-sh/setup-bun@v1
         with:
@@ -29,7 +28,9 @@ jobs:
           bun -v
 
       - name: Install Dependencies with Bun
-        run: bun install
+        run: |
+          rm -f yarn.lock .yarnrc.yml # Ensure no Yarn-related files
+          bun install --no-save
 
       - name: Run Lint
         run: bun run lint
