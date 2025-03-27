@@ -129,9 +129,10 @@ export const privateKeySchema = z
 
 // Public key: hex string, length: 66 (compressed) or 130 (uncompressed)
 // OR valid pubkey bytes as a base64 encoded string
-export const publicKeySchema = z.string().superRefine((key, ctx) => {
-	// Check if it's a hex string
-	if (/^[0-9a-fA-F]+$/.test(key)) {
+export const publicKeySchema = z
+	.string()
+	.regex(/^[0-9a-fA-F]+$/, "Public key must be a hex string")
+	.superRefine((key, ctx) => {
 		if (!(key.length === 66 || key.length === 130)) {
 			ctx.addIssue({
 				code: z.ZodIssueCode.custom,
