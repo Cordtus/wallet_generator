@@ -147,7 +147,7 @@ The different key types enable several interesting use cases:
 3. **Legacy Support**: Use secp256k1 for compatibility with older systems that expect RIPEMD160 hashes
 4. **Research & Development**: Test different cryptographic approaches for address generation
 
-## API Usage
+## Other Usage
 
 You can also use the functions programmatically:
 
