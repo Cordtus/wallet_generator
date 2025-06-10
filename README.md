@@ -134,18 +134,6 @@ yarn start
 ✔ Select key type: secp256k1 (skip keccak for hex)
 ```
 
-The tool will output:
-
-- **Osmo Address**: osmo1xxx...
-
-## Use Cases
-
-The different key types enable several interesting use cases:
-
-1. **Address Privacy**: Generate multiple addresses from the same key that appear unrelated
-2. **Cross-Chain Compatibility**: Use ETH secp256k1 to have the same address format across EVM and Cosmos chains
-3. **Legacy Support**: Use secp256k1 for compatibility with older systems that expect RIPEMD160 hashes
-4. **Research & Development**: Test different cryptographic approaches for address generation
 
 ## Other Usage
 
