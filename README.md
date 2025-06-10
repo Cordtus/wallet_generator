@@ -96,13 +96,6 @@ yarn start
 ✔ Select key type: Canonical (both addresses properly hashed)
 ```
 
-The tool will output:
-
-- **Cosmos Address**: gaia1xxx...
-- **Ethereum Address**: 0xxxx...
-- **Private Key**: xxx...
-- **Public Key**: xxx...
-
 #### Generating from a Private Key:
 
 ```bash
@@ -113,13 +106,6 @@ yarn start
 ✔ Enter the Bech32 prefix: gaia
 ✔ Select key type: ETH secp256k1 (skip RIPEMD160 for cosmos)
 ```
-
-The tool will output:
-
-- **Cosmos Address**: gaia1xxx...
-- **Ethereum Address**: 0xxxx...
-- **Private Key**: xxx...
-- **Public Key**: xxx...
 
 #### Generating from a Public Key:
 
@@ -132,6 +118,12 @@ yarn start
 ✔ Select key type: secp256k1 (skip keccak for hex)
 ```
 
+Depending on the mode, the output will include some or all of:
+
+- **Cosmos Address**: gaia1xxx...
+- **Ethereum Address**: 0xxxx...
+- **Private Key**: xxx...
+- **Public Key**: xxx...
 
 ## Other Usage
 
