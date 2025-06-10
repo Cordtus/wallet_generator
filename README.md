@@ -2,11 +2,7 @@
 
 Generates keys and/or wallet addresses from a **mnemonic seed**, **private key**, or **public key**. Supports arbitrary HD paths as per BIP32/BIP44 standards and outputs Bech32 addresses for Cosmos SDK as well as proper (non-evmos) Ethereum address.
 
-**NEW**: Now supports **custom key types** for different address derivation methods, allowing you to generate non-deterministic address pairs using different hashing approaches.
-
-Wallet applications love to gatekeep this. 
-You know who you are. 
-Stop it. Be better. 
+**NEW**: Now supports **custom key types** for different address derivation methods, allowing you to generate deterministic address pairs by hashing only one of the two addresses and directly converting it to the other format.
 
 ## Features
 
@@ -63,26 +59,28 @@ The tool now supports three different key types that affect how addresses are de
 - This is the standard method used by most wallets and produces the "correct" addresses for each chain type.
 
 ### **ETH secp256k1**
-- **Cosmos Address**: `PublicKey → Keccak256 → last 20 bytes → Bech32` (skips RIPEMD160)
-- **Ethereum Address**: `PublicKey → Keccak256 → last 20 bytes → Hex` (same as canonical)
+- **Cosmos Address**: `PublicKey → Keccak256 → last 20 bytes → Bech32` (omits RIPEMD160)
+- **Ethereum Address**: `PublicKey → Keccak256 → last 20 bytes → Hex` (canonical)
 - The cosmos address uses the same hash as Ethereum but encodes it as bech32.
 
 ### **secp256k1**
-- **Cosmos Address**: `PublicKey → SHA256 → RIPEMD160 → Bech32` (same as canonical)
-- **Ethereum Address**: `PublicKey → SHA256 → RIPEMD160 → Hex` (skips Keccak256)
+- **Cosmos Address**: `PublicKey → SHA256 → RIPEMD160 → Bech32` (canonical)
+- **Ethereum Address**: `PublicKey → SHA256 → RIPEMD160 → Hex` (omits Keccak256)
 - The hex address uses the same hash as cosmos but encodes it as hex.
 
-**Important**: These different key types produce **non-deterministic address pairs** - you cannot derive one address from the other without knowing the original public key and the key type used.
+**Important**: The "canonical" method produces **non-deterministic address pairs** - you cannot derive one address from the other.
+
+In *any case*, you cannot **safely** deerive one address from the other without knowing then underlying method used to derive the addresses from the key.
 
 ## Usage
 
-When you run the tool, you'll be prompted to select an input mode:
+When running the tool, you'll be prompted to select an input mode:
 
 1. **Mnemonic**: Generate private key, public key, and wallet addresses from a mnemonic seed.
 2. **Private Key**: Generate public key and wallet addresses from a private key.
 3. **Public Key**: Generate wallet addresses from a public key.
 
-For each mode, you'll also be prompted to select a **key type** that determines how the addresses are derived.
+As a final selection in every mode, you must select a **key type** that determines how the addresses are ultimately derived.
 
 ### Example Usage
 
@@ -100,7 +98,7 @@ yarn start
 
 The tool will output:
 
-- **Sei Address**: sei1xxx...
+- **Cosmos Address**: gaia1xxx...
 - **Ethereum Address**: 0xxxx...
 - **Private Key**: xxx...
 - **Public Key**: xxx...
@@ -112,13 +110,13 @@ yarn start
 
 ✔ Select input mode: Private Key
 ✔ Enter your private key: [your private key here]
-✔ Enter the Bech32 prefix: cosmos
+✔ Enter the Bech32 prefix: gaia
 ✔ Select key type: ETH secp256k1 (skip RIPEMD160 for cosmos)
 ```
 
 The tool will output:
 
-- **Cosmos Address**: cosmos1xxx...
+- **Cosmos Address**: gaia1xxx...
 - **Ethereum Address**: 0xxxx...
 - **Private Key**: xxx...
 - **Public Key**: xxx...
@@ -130,7 +128,7 @@ yarn start
 
 ✔ Select input mode: Public Key
 ✔ Enter your public key: [your public key here]
-✔ Enter the Bech32 prefix: osmo
+✔ Enter the Bech32 prefix: gaia
 ✔ Select key type: secp256k1 (skip keccak for hex)
 ```
 
