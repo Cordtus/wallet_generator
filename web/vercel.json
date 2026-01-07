@@ -1,5 +1,5 @@
 {
-	"installCommand": "echo 'Skipping install - static site'",
-	"buildCommand": "echo 'Skipping build - static site'",
+	"installCommand": "yarn install --ignore-scripts",
+	"buildCommand": "yarn build",
 	"outputDirectory": "."
 }
