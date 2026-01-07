@@ -1,0 +1,21 @@
+{
+	"name": "wallet-generator-web",
+	"version": "1.0.0",
+	"description": "Web-based wallet generator for Cosmos and Ethereum",
+	"type": "module",
+	"scripts": {
+		"build": "esbuild src/main.ts --bundle --outfile=dist/bundle.js --format=esm --minify --sourcemap",
+		"dev": "esbuild src/main.ts --bundle --outfile=dist/bundle.js --format=esm --watch --sourcemap"
+	},
+	"dependencies": {
+		"@noble/curves": "1.8.1",
+		"@noble/hashes": "1.7.1",
+		"@scure/bip32": "1.6.2",
+		"@scure/bip39": "1.5.4",
+		"bech32": "2.0.0"
+	},
+	"devDependencies": {
+		"esbuild": "0.25.0",
+		"typescript": "5.8.2"
+	}
+}
