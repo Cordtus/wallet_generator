@@ -81,16 +81,16 @@ const useTestMnemonic = (): void => {
 const switchMode = (mode: Mode): void => {
 	currentMode = mode
 
-	document.querySelectorAll(".mode-tab").forEach((tab) => {
+	for (const tab of document.querySelectorAll(".mode-tab")) {
 		tab.classList.remove("active")
 		if (tab.getAttribute("data-mode") === mode) {
 			tab.classList.add("active")
 		}
-	})
+	}
 
-	document.querySelectorAll(".mode-section").forEach((section) => {
+	for (const section of document.querySelectorAll(".mode-section")) {
 		section.classList.remove("active")
-	})
+	}
 
 	const activeSection = document.getElementById(`${mode}-section`)
 	if (activeSection) {
@@ -106,12 +106,12 @@ const switchMode = (mode: Mode): void => {
 const switchKeyType = (keyType: KeyType): void => {
 	currentKeyType = keyType
 
-	document.querySelectorAll(".key-type-tab").forEach((tab) => {
+	for (const tab of document.querySelectorAll(".key-type-tab")) {
 		tab.classList.remove("active")
 		if (tab.getAttribute("data-keytype") === keyType) {
 			tab.classList.add("active")
 		}
-	})
+	}
 }
 
 /**
@@ -269,25 +269,25 @@ const init = (): void => {
 	document.getElementById("btn-test-mnemonic")?.addEventListener("click", useTestMnemonic)
 	document.getElementById("btn-derive")?.addEventListener("click", derive)
 
-	document.querySelectorAll(".mode-tab").forEach((tab) => {
+	for (const tab of document.querySelectorAll(".mode-tab")) {
 		tab.addEventListener("click", () => {
 			const mode = tab.getAttribute("data-mode") as Mode
 			if (mode) {
 				switchMode(mode)
 			}
 		})
-	})
+	}
 
-	document.querySelectorAll(".key-type-tab").forEach((tab) => {
+	for (const tab of document.querySelectorAll(".key-type-tab")) {
 		tab.addEventListener("click", () => {
 			const keyType = tab.getAttribute("data-keytype") as KeyType
 			if (keyType) {
 				switchKeyType(keyType)
 			}
 		})
-	})
+	}
 
-	document.querySelectorAll(".preset-btn[data-path]").forEach((btn) => {
+	for (const btn of document.querySelectorAll(".preset-btn[data-path]")) {
 		btn.addEventListener("click", () => {
 			const path = btn.getAttribute("data-path")
 			const pathInput = document.getElementById("path") as HTMLInputElement
@@ -295,9 +295,9 @@ const init = (): void => {
 				pathInput.value = path
 			}
 		})
-	})
+	}
 
-	document.querySelectorAll(".preset-btn[data-prefix]").forEach((btn) => {
+	for (const btn of document.querySelectorAll(".preset-btn[data-prefix]")) {
 		btn.addEventListener("click", () => {
 			const prefix = btn.getAttribute("data-prefix")
 			const prefixInput = document.getElementById("prefix") as HTMLInputElement
@@ -305,7 +305,7 @@ const init = (): void => {
 				prefixInput.value = prefix
 			}
 		})
-	})
+	}
 }
 
 document.addEventListener("DOMContentLoaded", init)
