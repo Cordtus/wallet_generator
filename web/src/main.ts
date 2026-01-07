@@ -234,7 +234,8 @@ const derivePublicKey = (): void => {
 		const displayPrefix = prefix.charAt(0).toUpperCase() + prefix.slice(1)
 		const output = formatOutput({
 			"Key Type": currentKeyType,
-			[`${displayPrefix} Address`]: result.address
+			[`${displayPrefix} Address`]: result.address,
+			"Ethereum Address": result.ethAddress
 		})
 
 		setOutput(output)

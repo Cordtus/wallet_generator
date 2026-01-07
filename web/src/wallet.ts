@@ -294,48 +294,52 @@ const generateEthereumAddress = (publicKeyUncompressed: Uint8Array): string => {
 }
 
 /**
- * Generate Cosmos address from public key bytes
+ * Generate both Cosmos and Ethereum addresses from public key bytes
  * @param publicKeyBytes - Compressed or uncompressed public key
  * @param prefix - Bech32 prefix (e.g., "cosmos", "sei", "osmo")
- * @param keyType - Key type for address derivation
- * @returns Object containing the bech32-encoded address
+ * @param keyType - Key type for Cosmos address derivation (secp256k1 or eth_secp256k1)
+ * @returns Object containing both bech32 Cosmos address and hex Ethereum address
  */
 export const generateAddressesFromPublicKey = (
 	publicKeyBytes: Uint8Array,
 	prefix: string,
 	keyType: KeyType = "secp256k1"
-): { address: string } => {
-	if (keyType === "eth_secp256k1") {
-		// For eth_secp256k1, we need uncompressed public key
-		let uncompressedKey: Uint8Array
-		if (publicKeyBytes.length === 33) {
-			// Compressed key - need to decompress
-			const point = secp256k1.ProjectivePoint.fromHex(publicKeyBytes)
-			uncompressedKey = point.toRawBytes(false).slice(1) // Remove 0x04 prefix
-		} else if (publicKeyBytes.length === 65) {
-			// Already uncompressed with 0x04 prefix
-			uncompressedKey = publicKeyBytes.slice(1)
-		} else {
-			// Already uncompressed without prefix
-			uncompressedKey = publicKeyBytes
-		}
-		const address = generateCosmosAddressEthSecp256k1(uncompressedKey, prefix)
-		return { address }
-	}
-
-	// Standard secp256k1: use compressed key
+): { address: string; ethAddress: string } => {
+	// Get both compressed and uncompressed keys for different derivations
 	let compressedKey: Uint8Array
+	let uncompressedKey: Uint8Array
+
 	if (publicKeyBytes.length === 33) {
+		// Input is compressed - decompress for ETH address
 		compressedKey = publicKeyBytes
+		const point = secp256k1.ProjectivePoint.fromHex(publicKeyBytes)
+		uncompressedKey = point.toRawBytes(false).slice(1) // Remove 0x04 prefix
+	} else if (publicKeyBytes.length === 65) {
+		// Input is uncompressed with 0x04 prefix
+		uncompressedKey = publicKeyBytes.slice(1)
+		const point = secp256k1.ProjectivePoint.fromHex(publicKeyBytes)
+		compressedKey = point.toRawBytes(true)
 	} else {
-		// Need to compress
-		const point = secp256k1.ProjectivePoint.fromHex(
-			publicKeyBytes.length === 65 ? publicKeyBytes : new Uint8Array([0x04, ...publicKeyBytes])
-		)
+		// Input is uncompressed without prefix (64 bytes)
+		uncompressedKey = publicKeyBytes
+		const point = secp256k1.ProjectivePoint.fromHex(new Uint8Array([0x04, ...publicKeyBytes]))
 		compressedKey = point.toRawBytes(true)
 	}
-	const address = generateCosmosAddressSecp256k1(compressedKey, prefix)
-	return { address }
+
+	// Generate Ethereum address (always uses Keccak256 on uncompressed key)
+	const ethAddress = generateEthereumAddress(uncompressedKey)
+
+	// Generate Cosmos address based on key type
+	let address: string
+	if (keyType === "eth_secp256k1") {
+		// EVM-compatible: uses Keccak256 (same derivation as Ethereum)
+		address = generateCosmosAddressEthSecp256k1(uncompressedKey, prefix)
+	} else {
+		// Standard Cosmos: uses SHA256 -> RIPEMD160
+		address = generateCosmosAddressSecp256k1(compressedKey, prefix)
+	}
+
+	return { address, ethAddress }
 }
 
 /**
