@@ -604,11 +604,11 @@
 			<!-- Public Key Mode -->
 			<div id="publickey-section" class="mode-section">
 				<div class="form-group">
-					<label for="publickey">Public Key (Hex)</label>
-					<input type="text" id="publickey" placeholder="Enter 66 (compressed) or 130 (uncompressed) character hex public key..." />
+					<label for="publickey">Public Key (Hex or Base64)</label>
+					<input type="text" id="publickey" placeholder="Enter public key in hex or base64 format..." />
 				</div>
 				<div class="info">
-					<strong>Note:</strong> Public key mode can only derive the Cosmos address. Private key and Ethereum address cannot be derived from a public key.
+					<strong>Note:</strong> Public key mode can only derive the Cosmos address. Accepts both hex (66/130 chars) and base64 formats.
 				</div>
 			</div>
 

@@ -6,19 +6,20 @@ import * as bip39 from "@scure/bip39"
 import { wordlist } from "@scure/bip39/wordlists/english"
 import {
 	type KeyType,
-	validateMnemonic,
-	validateDerivationPath,
-	validatePrefix,
-	validatePrivateKey,
-	validatePublicKey,
-	getPrivateKeyFromMnemonic,
+	bytesToHex,
 	generateAddressesFromPrivateKey,
 	generateAddressesFromPublicKey,
-	bytesToHex,
-	hexToBytes
+	getPrivateKeyFromMnemonic,
+	hexToBytes,
+	validateDerivationPath,
+	validateMnemonic,
+	validatePrefix,
+	validatePrivateKey,
+	validatePublicKey
 } from "./wallet.js"
 
-const TEST_MNEMONIC = "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
+const TEST_MNEMONIC =
+	"abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
 
 type Mode = "mnemonic" | "privatekey" | "publickey"
 let currentMode: Mode = "mnemonic"
@@ -205,6 +206,7 @@ const derivePrivateKey = (): void => {
 
 /**
  * Handle public key mode derivation
+ * Supports both hex and base64 public key formats
  */
 const derivePublicKey = (): void => {
 	const publicKeyInput = document.getElementById("publickey") as HTMLInputElement
@@ -213,7 +215,7 @@ const derivePublicKey = (): void => {
 	const publicKey = publicKeyInput?.value.trim() || ""
 	const prefix = prefixInput?.value.trim() || ""
 
-	const keyError = validatePublicKey(publicKey)
+	const { error: keyError, hexKey } = validatePublicKey(publicKey)
 	if (keyError) {
 		setOutput(`Public Key Error: ${keyError}`, true)
 		return
@@ -226,7 +228,7 @@ const derivePublicKey = (): void => {
 	}
 
 	try {
-		const publicKeyBytes = hexToBytes(publicKey)
+		const publicKeyBytes = hexToBytes(hexKey)
 		const result = generateAddressesFromPublicKey(publicKeyBytes, prefix, currentKeyType)
 
 		const displayPrefix = prefix.charAt(0).toUpperCase() + prefix.slice(1)

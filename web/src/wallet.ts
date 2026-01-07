@@ -6,10 +6,10 @@ import { secp256k1 } from "@noble/curves/secp256k1"
 import { ripemd160 } from "@noble/hashes/ripemd160"
 import { keccak_256 } from "@noble/hashes/sha3"
 import { sha256 } from "@noble/hashes/sha256"
-import { bech32 } from "bech32"
 import { HDKey } from "@scure/bip32"
 import * as bip39 from "@scure/bip39"
 import { wordlist } from "@scure/bip39/wordlists/english"
+import { bech32 } from "bech32"
 
 /**
  * Key types for address derivation
@@ -21,7 +21,12 @@ export type KeyType = "secp256k1" | "eth_secp256k1"
 /**
  * Convert bits between different bases (needed for bech32 encoding)
  */
-const convertBits = (data: Uint8Array, fromBits: number, toBits: number, pad: boolean): number[] => {
+const convertBits = (
+	data: Uint8Array,
+	fromBits: number,
+	toBits: number,
+	pad: boolean
+): number[] => {
 	let acc = 0
 	let bits = 0
 	const result: number[] = []
@@ -50,7 +55,7 @@ const convertBits = (data: Uint8Array, fromBits: number, toBits: number, pad: bo
 export const hexToBytes = (hex: string): Uint8Array => {
 	const bytes = new Uint8Array(hex.length / 2)
 	for (let i = 0; i < hex.length; i += 2) {
-		bytes[i / 2] = parseInt(hex.slice(i, i + 2), 16)
+		bytes[i / 2] = Number.parseInt(hex.slice(i, i + 2), 16)
 	}
 	return bytes
 }
@@ -62,6 +67,32 @@ export const bytesToHex = (bytes: Uint8Array): string => {
 	return Array.from(bytes)
 		.map((b) => b.toString(16).padStart(2, "0"))
 		.join("")
+}
+
+/**
+ * Detect if a string is likely a base64 encoded public key
+ * @param input - The string to check
+ * @returns Boolean indicating if it's likely base64 encoded
+ */
+export const isLikelyBase64 = (input: string): boolean => {
+	// Base64 uses A-Za-z0-9+/= characters
+	// Hex only uses 0-9a-fA-F
+	// If it matches base64 pattern but NOT hex pattern, it's likely base64
+	return /^[A-Za-z0-9+/=]+$/.test(input) && !/^[0-9a-fA-F]+$/.test(input)
+}
+
+/**
+ * Convert a base64 string to hex
+ * @param base64 - The base64 encoded string
+ * @returns Hex string
+ */
+export const base64ToHex = (base64: string): string => {
+	const binaryString = atob(base64)
+	let hex = ""
+	for (let i = 0; i < binaryString.length; i++) {
+		hex += binaryString.charCodeAt(i).toString(16).padStart(2, "0")
+	}
+	return hex
 }
 
 /**
@@ -160,18 +191,41 @@ export const validatePrivateKey = (key: string): string | null => {
 }
 
 /**
- * Validate a public key
- * @param key - The public key to validate
- * @returns Error message if invalid, null if valid
+ * Validate a public key (supports hex and base64 formats)
+ * @param key - The public key to validate (hex or base64)
+ * @returns Object with error message if invalid, or converted hex if valid
  */
-export const validatePublicKey = (key: string): string | null => {
-	if (!/^[0-9a-fA-F]+$/.test(key)) {
-		return "Public key must be a hex string"
+export const validatePublicKey = (key: string): { error: string | null; hexKey: string } => {
+	const trimmedKey = key.trim()
+
+	// Check if it's base64 format
+	if (isLikelyBase64(trimmedKey)) {
+		try {
+			const hexKey = base64ToHex(trimmedKey)
+			// Validate the converted hex length
+			if (!(hexKey.length === 66 || hexKey.length === 130)) {
+				return {
+					error: `Decoded base64 key has invalid length (${hexKey.length}). Expected 66 (compressed) or 130 (uncompressed).`,
+					hexKey: ""
+				}
+			}
+			return { error: null, hexKey }
+		} catch {
+			return { error: "Invalid base64 encoding", hexKey: "" }
+		}
 	}
-	if (!(key.length === 66 || key.length === 130)) {
-		return "Public key must be either 66 (compressed) or 130 (uncompressed) hex characters long"
+
+	// Validate as hex
+	if (!/^[0-9a-fA-F]+$/.test(trimmedKey)) {
+		return { error: "Public key must be a hex or base64 string", hexKey: "" }
 	}
-	return null
+	if (!(trimmedKey.length === 66 || trimmedKey.length === 130)) {
+		return {
+			error: "Public key must be either 66 (compressed) or 130 (uncompressed) hex characters",
+			hexKey: ""
+		}
+	}
+	return { error: null, hexKey: trimmedKey }
 }
 
 /**
@@ -218,7 +272,10 @@ const generateCosmosAddressSecp256k1 = (publicKeyBytes: Uint8Array, prefix: stri
  * @param prefix - Bech32 prefix
  * @returns Bech32-encoded address
  */
-const generateCosmosAddressEthSecp256k1 = (publicKeyUncompressed: Uint8Array, prefix: string): string => {
+const generateCosmosAddressEthSecp256k1 = (
+	publicKeyUncompressed: Uint8Array,
+	prefix: string
+): string => {
 	const keccakHash = keccak_256(publicKeyUncompressed)
 	const addressBytes = keccakHash.slice(-20)
 	const fiveBitArray = convertBits(addressBytes, 8, 5, true)
