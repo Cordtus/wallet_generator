@@ -4,201 +4,332 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Wallet Generator</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
 	<style>
+		:root {
+			--bg-primary: #08080c;
+			--bg-secondary: #0f0f14;
+			--bg-surface: #16161e;
+			--bg-elevated: #1e1e28;
+			--bg-input: #12121a;
+
+			--border-subtle: #2a2a36;
+			--border-medium: #3a3a48;
+			--border-focus: #d4a574;
+
+			--text-primary: #e8e8ed;
+			--text-secondary: #9898a6;
+			--text-muted: #6a6a78;
+			--text-accent: #d4a574;
+
+			--accent-primary: #d4a574;
+			--accent-primary-dim: #a68352;
+			--accent-primary-glow: rgba(212, 165, 116, 0.15);
+			--accent-secondary: #5eead4;
+			--accent-secondary-dim: #2dd4bf;
+
+			--status-warning-bg: rgba(251, 191, 36, 0.08);
+			--status-warning-border: rgba(251, 191, 36, 0.25);
+			--status-warning-text: #fbbf24;
+			--status-info-bg: rgba(94, 234, 212, 0.06);
+			--status-info-border: rgba(94, 234, 212, 0.2);
+			--status-info-text: #5eead4;
+			--status-error-bg: rgba(239, 68, 68, 0.08);
+			--status-error-border: rgba(239, 68, 68, 0.3);
+			--status-error-text: #f87171;
+
+			--radius-sm: 4px;
+			--radius-md: 8px;
+			--radius-lg: 12px;
+
+			--font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+			--font-display: 'Syne', sans-serif;
+			--font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+			--transition-fast: 120ms ease;
+			--transition-base: 200ms ease;
+			--transition-slow: 300ms ease;
+		}
+
 		* {
 			margin: 0;
 			padding: 0;
 			box-sizing: border-box;
 		}
 
+		html {
+			font-size: 16px;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+		}
+
 		body {
-			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+			font-family: var(--font-sans);
 			line-height: 1.6;
-			color: #333;
-			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			color: var(--text-primary);
+			background: var(--bg-primary);
 			min-height: 100vh;
-			padding: 20px;
+			padding: 24px;
+			position: relative;
+		}
+
+		body::before {
+			content: '';
+			position: fixed;
+			inset: 0;
+			background:
+				radial-gradient(ellipse 80% 50% at 50% -20%, rgba(212, 165, 116, 0.04), transparent),
+				radial-gradient(ellipse 60% 40% at 100% 100%, rgba(94, 234, 212, 0.02), transparent);
+			pointer-events: none;
+			z-index: 0;
 		}
 
 		.container {
-			max-width: 800px;
+			max-width: 720px;
 			margin: 0 auto;
-			background: white;
-			border-radius: 12px;
-			box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+			background: var(--bg-secondary);
+			border: 1px solid var(--border-subtle);
+			border-radius: var(--radius-lg);
 			overflow: hidden;
+			position: relative;
+			z-index: 1;
+			box-shadow:
+				0 0 0 1px rgba(255, 255, 255, 0.02),
+				0 20px 50px -12px rgba(0, 0, 0, 0.5),
+				0 0 80px -20px rgba(212, 165, 116, 0.08);
 		}
 
 		header {
-			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-			color: white;
-			padding: 30px;
-			text-align: center;
+			background: var(--bg-surface);
+			border-bottom: 1px solid var(--border-subtle);
+			padding: 28px 32px;
+			position: relative;
+			overflow: hidden;
+		}
+
+		header::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 1px;
+			background: linear-gradient(90deg, transparent, var(--accent-primary-dim), transparent);
+			opacity: 0.5;
 		}
 
 		header h1 {
-			font-size: 28px;
-			margin-bottom: 10px;
+			font-family: var(--font-display);
+			font-size: 1.75rem;
+			font-weight: 700;
+			color: var(--text-primary);
+			letter-spacing: -0.02em;
+			margin-bottom: 6px;
 		}
 
 		header p {
-			opacity: 0.95;
-			font-size: 14px;
+			color: var(--text-muted);
+			font-size: 0.875rem;
+			font-weight: 500;
 		}
 
 		.content {
-			padding: 30px;
+			padding: 28px 32px;
 		}
 
 		.form-group {
-			margin-bottom: 25px;
+			margin-bottom: 24px;
 		}
 
 		label {
 			display: block;
 			font-weight: 600;
+			font-size: 0.8125rem;
+			color: var(--text-secondary);
 			margin-bottom: 8px;
-			color: #555;
-			font-size: 14px;
+			text-transform: uppercase;
+			letter-spacing: 0.04em;
 		}
 
-		textarea, input[type="text"] {
+		textarea,
+		input[type="text"] {
 			width: 100%;
-			padding: 12px;
-			font-size: 14px;
-			border: 2px solid #e0e0e0;
-			border-radius: 6px;
-			transition: border-color 0.3s;
-			font-family: 'Courier New', monospace;
-			box-sizing: border-box;
+			padding: 14px 16px;
+			font-size: 0.9375rem;
+			font-family: var(--font-mono);
+			font-weight: 400;
+			color: var(--text-primary);
+			background: var(--bg-input);
+			border: 1px solid var(--border-subtle);
+			border-radius: var(--radius-md);
+			transition:
+				border-color var(--transition-base),
+				box-shadow var(--transition-base),
+				background var(--transition-base);
 		}
 
-		textarea:focus, input[type="text"]:focus {
+		textarea::placeholder,
+		input[type="text"]::placeholder {
+			color: var(--text-muted);
+		}
+
+		textarea:hover,
+		input[type="text"]:hover {
+			border-color: var(--border-medium);
+		}
+
+		textarea:focus,
+		input[type="text"]:focus {
 			outline: none;
-			border-color: #667eea;
+			border-color: var(--border-focus);
+			background: var(--bg-surface);
+			box-shadow: 0 0 0 3px var(--accent-primary-glow);
 		}
 
 		textarea {
 			resize: vertical;
-			min-height: 80px;
+			min-height: 88px;
+			line-height: 1.5;
 		}
 
 		.button-group {
 			display: flex;
 			gap: 10px;
-			margin-top: 10px;
+			margin-top: 12px;
 		}
 
 		button {
 			flex: 1;
-			padding: 12px 24px;
-			font-size: 16px;
+			padding: 14px 24px;
+			font-family: var(--font-sans);
+			font-size: 0.9375rem;
 			font-weight: 600;
-			color: white;
-			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			color: var(--bg-primary);
+			background: var(--accent-primary);
 			border: none;
-			border-radius: 6px;
+			border-radius: var(--radius-md);
 			cursor: pointer;
-			transition: transform 0.2s, box-shadow 0.2s;
-			box-sizing: border-box;
+			transition:
+				background var(--transition-fast),
+				transform var(--transition-fast),
+				box-shadow var(--transition-base);
+			position: relative;
+			overflow: hidden;
+		}
+
+		button::before {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+			pointer-events: none;
 		}
 
 		button:hover {
-			transform: translateY(-2px);
-			box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+			background: #e0b485;
+			box-shadow: 0 4px 20px -4px rgba(212, 165, 116, 0.4);
 		}
 
 		button:active {
-			transform: translateY(0);
+			transform: scale(0.98);
 		}
 
 		button.secondary {
-			background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+			background: var(--bg-elevated);
+			color: var(--text-primary);
+			border: 1px solid var(--border-medium);
+		}
+
+		button.secondary::before {
+			display: none;
 		}
 
 		button.secondary:hover {
-			box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+			background: var(--bg-surface);
+			border-color: var(--accent-primary-dim);
+			box-shadow: 0 0 0 3px var(--accent-primary-glow);
 		}
 
 		.mode-tabs {
 			display: flex;
-			gap: 0;
-			margin-bottom: 25px;
-			border-radius: 6px;
-			overflow: hidden;
-			border: 2px solid #e0e0e0;
+			gap: 4px;
+			margin-bottom: 24px;
+			padding: 4px;
+			background: var(--bg-input);
+			border-radius: var(--radius-md);
+			border: 1px solid var(--border-subtle);
 		}
 
 		.mode-tab {
 			flex: 1;
 			padding: 14px 20px;
-			font-size: 14px;
+			font-size: 0.9375rem;
 			font-weight: 600;
-			color: #666;
-			background: #f8f9fa;
+			color: var(--text-muted);
+			background: transparent;
 			border: none;
+			border-radius: var(--radius-sm);
 			cursor: pointer;
-			transition: all 0.2s;
-			border-radius: 0;
+			transition: all var(--transition-base);
 		}
 
-		.mode-tab:not(:last-child) {
-			border-right: 2px solid #e0e0e0;
+		.mode-tab::before {
+			display: none;
 		}
 
-		.mode-tab:hover {
-			background: #eee;
-			transform: none;
-			box-shadow: none;
+		.mode-tab:hover:not(.active) {
+			color: var(--text-secondary);
+			background: rgba(255, 255, 255, 0.03);
 		}
 
 		.mode-tab.active {
-			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-			color: white;
-		}
-
-		.mode-tab.active:hover {
-			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			color: var(--text-primary);
+			background: var(--bg-elevated);
+			box-shadow:
+				0 1px 3px rgba(0, 0, 0, 0.2),
+				inset 0 1px 0 rgba(255, 255, 255, 0.04);
 		}
 
 		.key-type-tabs {
 			display: flex;
-			gap: 0;
-			border-radius: 6px;
-			overflow: hidden;
-			border: 2px solid #e0e0e0;
+			gap: 4px;
+			padding: 4px;
+			background: var(--bg-input);
+			border-radius: var(--radius-md);
+			border: 1px solid var(--border-subtle);
 		}
 
 		.key-type-tab {
 			flex: 1;
-			padding: 10px 16px;
-			font-size: 13px;
+			padding: 12px 18px;
+			font-size: 0.9375rem;
 			font-weight: 600;
-			color: #666;
-			background: #f8f9fa;
+			color: var(--text-muted);
+			background: transparent;
 			border: none;
+			border-radius: var(--radius-sm);
 			cursor: pointer;
-			transition: all 0.2s;
-			border-radius: 0;
+			transition: all var(--transition-base);
+			font-family: var(--font-mono);
 		}
 
-		.key-type-tab:not(:last-child) {
-			border-right: 2px solid #e0e0e0;
+		.key-type-tab::before {
+			display: none;
 		}
 
-		.key-type-tab:hover {
-			background: #eee;
-			transform: none;
-			box-shadow: none;
+		.key-type-tab:hover:not(.active) {
+			color: var(--text-secondary);
+			background: rgba(255, 255, 255, 0.03);
 		}
 
 		.key-type-tab.active {
-			background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-			color: white;
-		}
-
-		.key-type-tab.active:hover {
-			background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+			color: var(--accent-secondary);
+			background: var(--bg-elevated);
+			box-shadow:
+				0 1px 3px rgba(0, 0, 0, 0.2),
+				inset 0 1px 0 rgba(255, 255, 255, 0.04);
 		}
 
 		.mode-section {
@@ -207,81 +338,102 @@
 
 		.mode-section.active {
 			display: block;
+			animation: fadeIn 0.2s ease;
+		}
+
+		@keyframes fadeIn {
+			from { opacity: 0; transform: translateY(-4px); }
+			to { opacity: 1; transform: translateY(0); }
 		}
 
 		.output {
-			background: #f8f9fa;
-			border: 2px solid #e9ecef;
-			border-radius: 6px;
+			background: var(--bg-input);
+			border: 1px solid var(--border-subtle);
+			border-radius: var(--radius-md);
 			padding: 20px;
-			font-family: 'Courier New', monospace;
-			font-size: 13px;
+			font-family: var(--font-mono);
+			font-size: 0.8125rem;
 			line-height: 1.8;
 			word-break: break-all;
 			white-space: pre-wrap;
-			color: #495057;
+			color: var(--text-secondary);
 		}
 
 		.output.empty {
-			color: #aaa;
-			font-style: italic;
+			color: var(--text-muted);
+			font-style: normal;
+			text-align: center;
+			padding: 32px 20px;
 		}
 
 		.output.error {
-			background: #f8d7da;
-			border-color: #f5c6cb;
-			color: #721c24;
+			background: var(--status-error-bg);
+			border-color: var(--status-error-border);
+			color: var(--status-error-text);
 		}
 
 		.warning {
-			background: #fff3cd;
-			border: 1px solid #ffc107;
-			border-radius: 6px;
-			padding: 12px;
-			margin-bottom: 20px;
-			font-size: 14px;
-			color: #856404;
+			background: var(--status-warning-bg);
+			border: 1px solid var(--status-warning-border);
+			border-radius: var(--radius-md);
+			padding: 14px 16px;
+			margin-bottom: 24px;
+			font-size: 0.8125rem;
+			color: var(--status-warning-text);
+			line-height: 1.5;
 		}
 
 		.warning strong {
 			display: block;
-			margin-bottom: 5px;
+			margin-bottom: 4px;
+			font-weight: 600;
 		}
 
 		.info {
-			background: #d1ecf1;
-			border: 1px solid #bee5eb;
-			border-radius: 6px;
-			padding: 12px;
+			background: var(--status-info-bg);
+			border: 1px solid var(--status-info-border);
+			border-radius: var(--radius-md);
+			padding: 14px 16px;
 			margin-bottom: 20px;
-			font-size: 13px;
-			color: #0c5460;
+			font-size: 0.8125rem;
+			color: var(--status-info-text);
+			line-height: 1.6;
+		}
+
+		.info strong {
+			font-weight: 600;
 		}
 
 		.path-presets {
 			display: flex;
 			gap: 8px;
-			margin-top: 8px;
+			margin-top: 12px;
 			flex-wrap: wrap;
 		}
 
 		.preset-btn {
-			padding: 6px 12px;
-			font-size: 12px;
-			background: #f0f0f0;
-			color: #666;
-			border: 1px solid #ddd;
-			border-radius: 4px;
+			padding: 10px 16px;
+			font-family: var(--font-mono);
+			font-size: 0.8125rem;
+			font-weight: 500;
+			background: var(--bg-elevated);
+			color: var(--text-secondary);
+			border: 1px solid var(--border-subtle);
+			border-radius: var(--radius-md);
 			cursor: pointer;
-			transition: all 0.2s;
-			flex: 0;
+			transition: all var(--transition-fast);
+			flex: 0 0 auto;
+			white-space: nowrap;
+		}
+
+		.preset-btn::before {
+			display: none;
 		}
 
 		.preset-btn:hover {
-			background: #e0e0e0;
-			border-color: #bbb;
-			transform: none;
-			box-shadow: none;
+			color: var(--text-primary);
+			background: var(--bg-surface);
+			border-color: var(--accent-primary-dim);
 		}
 
 		.hidden {
@@ -292,44 +444,96 @@
 			display: flex;
 			justify-content: space-between;
 			align-items: flex-start;
-			margin-bottom: 8px;
-			padding-bottom: 8px;
-			border-bottom: 1px solid #e9ecef;
+			gap: 16px;
+			padding: 12px 0;
+			border-bottom: 1px solid var(--border-subtle);
+		}
+
+		.output-row:first-child {
+			padding-top: 0;
 		}
 
 		.output-row:last-child {
 			border-bottom: none;
-			margin-bottom: 0;
 			padding-bottom: 0;
 		}
 
 		.output-label {
 			font-weight: 600;
-			color: #667eea;
-			min-width: 140px;
+			color: var(--accent-primary);
+			min-width: 120px;
 			flex-shrink: 0;
+			font-size: 0.75rem;
+			text-transform: uppercase;
+			letter-spacing: 0.03em;
+			padding-top: 2px;
 		}
 
 		.output-value {
 			word-break: break-all;
 			text-align: right;
 			flex: 1;
+			color: var(--text-primary);
+			font-size: 0.8125rem;
+		}
+
+		.generate-btn-wrapper {
+			margin-top: 8px;
+		}
+
+		.generate-btn-wrapper button {
+			width: 100%;
+			padding: 15px 24px;
+			font-size: 0.9375rem;
 		}
 
 		@media (max-width: 600px) {
+			body {
+				padding: 12px;
+			}
+
+			.container {
+				border-radius: var(--radius-md);
+			}
+
+			header {
+				padding: 20px;
+			}
+
+			header h1 {
+				font-size: 1.5rem;
+			}
+
+			.content {
+				padding: 20px;
+			}
+
 			.output-row {
 				flex-direction: column;
-				align-items: flex-start;
+				gap: 4px;
 			}
 
 			.output-value {
 				text-align: left;
-				margin-top: 4px;
 			}
 
 			.mode-tab {
-				padding: 12px 8px;
-				font-size: 12px;
+				padding: 10px 8px;
+				font-size: 0.75rem;
+			}
+
+			.button-group {
+				flex-direction: column;
+			}
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			*,
+			*::before,
+			*::after {
+				animation-duration: 0.01ms !important;
+				animation-iteration-count: 1 !important;
+				transition-duration: 0.01ms !important;
 			}
 		}
 	</style>
@@ -338,13 +542,13 @@
 	<div class="container">
 		<header>
 			<h1>Wallet Generator</h1>
-			<p>Generate Cosmos (Bech32) and Ethereum addresses offline</p>
+			<p>Generate Cosmos and Ethereum addresses offline</p>
 		</header>
 
 		<div class="content">
 			<div class="warning">
 				<strong>For Testing & Educational Purposes Only</strong>
-				This tool should NOT be used for managing real funds in production. Use established wallet software for production use.
+				This tool should NOT be used for managing real funds. Use established wallet software for production use.
 			</div>
 
 			<div class="mode-tabs">
@@ -353,11 +557,24 @@
 				<button class="mode-tab" data-mode="publickey">Public Key</button>
 			</div>
 
+			<!-- Key Type Selection -->
+			<div class="form-group">
+				<label>Key Type</label>
+				<div class="key-type-tabs">
+					<button class="key-type-tab active" data-keytype="secp256k1">secp256k1</button>
+					<button class="key-type-tab" data-keytype="eth_secp256k1">eth_secp256k1</button>
+				</div>
+				<div class="info" style="margin-top: 12px; margin-bottom: 0;">
+					<strong>secp256k1:</strong> Standard Cosmos address (SHA256 + RIPEMD160)<br>
+					<strong>eth_secp256k1:</strong> EVM-compatible chains like Injective, EVMOS (Keccak256)
+				</div>
+			</div>
+
 			<!-- Mnemonic Mode -->
 			<div id="mnemonic-section" class="mode-section active">
 				<div class="form-group">
 					<label for="mnemonic">BIP39 Mnemonic Phrase</label>
-					<textarea id="mnemonic" placeholder="Enter 12 or 24-word mnemonic or click 'Generate New' below..."></textarea>
+					<textarea id="mnemonic" placeholder="Enter 12 or 24-word mnemonic or generate a new one..."></textarea>
 					<div class="button-group">
 						<button class="secondary" id="btn-generate-mnemonic">Generate New</button>
 						<button class="secondary" id="btn-test-mnemonic">Use Test Mnemonic</button>
@@ -395,20 +612,7 @@
 				</div>
 			</div>
 
-			<!-- Key Type Selection -->
-			<div class="form-group">
-				<label>Key Type</label>
-				<div class="key-type-tabs">
-					<button class="key-type-tab active" data-keytype="secp256k1">secp256k1</button>
-					<button class="key-type-tab" data-keytype="eth_secp256k1">eth_secp256k1</button>
-				</div>
-				<div class="info" style="margin-top: 10px; margin-bottom: 0;">
-					<strong>secp256k1:</strong> Standard Cosmos address (SHA256 + RIPEMD160)<br>
-					<strong>eth_secp256k1:</strong> EVM-compatible Cosmos chains like Injective, EVMOS (Keccak256, same as ETH)
-				</div>
-			</div>
-
-			<!-- Common: Prefix -->
+			<!-- Prefix -->
 			<div class="form-group">
 				<label for="prefix">Bech32 Prefix</label>
 				<input type="text" id="prefix" value="cosmos" />
@@ -424,8 +628,8 @@
 				</div>
 			</div>
 
-			<div class="form-group">
-				<button id="btn-derive" style="width: 100%;">Generate Addresses</button>
+			<div class="form-group generate-btn-wrapper">
+				<button id="btn-derive">Generate Addresses</button>
 			</div>
 
 			<div class="form-group">
