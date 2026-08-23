@@ -5,10 +5,11 @@ import { mnemonicToSeedSync, validateMnemonic } from "bip39"
 const bip32 = BIP32Factory(ecc)
 
 export const getPrivateKeyFromMnemonic = (mnemonic: string, derivationPath: string): Uint8Array => {
-	if (!validateMnemonic(mnemonic)) {
+	const normalized = mnemonic.toLowerCase()
+	if (!validateMnemonic(normalized)) {
 		throw new Error(`Invalid mnemonic: ${mnemonic}`)
 	}
-	const seed = mnemonicToSeedSync(mnemonic)
+	const seed = mnemonicToSeedSync(normalized)
 	const hdwallet = bip32.fromSeed(seed)
 
 	let path = derivationPath.trim()
