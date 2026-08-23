@@ -2,8 +2,6 @@
 
 Generate private keys, public keys, and wallet addresses from a **mnemonic seed**, **private key**, or **public key**. Supports arbitrary BIP32/BIP44 HD paths and outputs Bech32 (Cosmos SDK) and hex (Ethereum) addresses.
 
-Wallet applications love to gatekeep this. You know who you are. Stop it. Be better.
-
 ## Features
 
 - Private key, public key, and address derivation from a **mnemonic seed**.
@@ -28,7 +26,7 @@ bun install
 bun run build
 ```
 
-The `keygen` script is the non-interactive CLI. Secrets are read from environment variables or stdin (never argv, so they don't land in shell history).
+`bun run keygen` is the non-interactive CLI. Secrets are read from environment variables or stdin (never argv).
 
 ### Private key from a mnemonic
 
@@ -61,11 +59,11 @@ bun run keygen --mode private-key --style evm --prefix cosmos
 | `--path <path>` | HD derivation path (mnemonic only) | style default |
 | `--help` | Show help | — |
 
-The `evm` style defaults to the `m/44'/60'/0'/0/0` path with the ETH key type; `cosmos` defaults to `m/44'/118'/0'/0/0` with the Canonical key type.
+Style defaults: `evm` uses path `m/44'/60'/0'/0/0` with the ETH key type; `cosmos` uses `m/44'/118'/0'/0/0` with the Canonical key type.
 
 ## Interactive mode
 
-Prefer a guided prompt? Run `bun run start` and select a mode (Mnemonic, Private Key, or Public Key), enter the derivation path, Bech32 prefix, and key type.
+`bun run start` prompts for mode (Mnemonic, Private Key, Public Key), derivation path, Bech32 prefix, and key type.
 
 ### Key types
 
@@ -75,7 +73,7 @@ Prefer a guided prompt? Run `bun run start` and select a mode (Mnemonic, Private
 
 ### Public key formats
 
-Hex (compressed) and base64 of the same key are both accepted:
+Hex (compressed) or base64:
 
 ```
 033303c7d61c8e8582de6ed52e6227408eb957abc98ef5759514cdac1bb5cd0a42
