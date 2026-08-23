@@ -32,4 +32,14 @@ describe("getPrivateKeyFromMnemonic", () => {
 		// Check that schema validation catches the invalid derivation path
 		expect(() => derivationPathSchema.parse(invalidDerivationPath)).toThrow()
 	})
+
+	it("should derive the same private key regardless of mnemonic case", () => {
+		const mnemonic = "test test test test test test test test test test test ball"
+		const derivationPath = "m/44'/0'/0'/0/0"
+
+		const lower = getPrivateKeyFromMnemonic(mnemonic, derivationPath)
+		const upper = getPrivateKeyFromMnemonic(mnemonic.toUpperCase(), derivationPath)
+
+		expect(Buffer.from(upper)).toEqual(Buffer.from(lower))
+	})
 })
