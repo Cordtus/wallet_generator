@@ -15,7 +15,7 @@ Generate private keys, public keys, and wallet addresses from a **mnemonic seed*
 
 - [Bun](https://bun.sh)
 
-## Quickstart (CLI)
+## Quickstart
 
 Clone, install, and build:
 
@@ -25,6 +25,12 @@ cd wallet_generator
 bun install
 bun run build
 ```
+
+### Interactive mode
+
+`bun run start` prompts for mode (Mnemonic, Private Key, Public Key), derivation path, Bech32 prefix, and key type.
+
+### CLI
 
 `bun run keygen` is the non-interactive CLI. Secrets are read from environment variables or stdin (never argv).
 
@@ -61,11 +67,7 @@ bun run keygen --mode private-key --style evm --prefix cosmos
 
 Style defaults: `evm` uses path `m/44'/60'/0'/0/0` with the ETH key type; `cosmos` uses `m/44'/118'/0'/0/0` with the Canonical key type.
 
-## Interactive mode
-
-`bun run start` prompts for mode (Mnemonic, Private Key, Public Key), derivation path, Bech32 prefix, and key type.
-
-### Key types
+## Key types
 
 - **Canonical** (default): `PublicKey → SHA256 → RIPEMD160 → Bech32` for Cosmos; `PublicKey → Keccak256 → last 20 bytes → Hex` for Ethereum.
 - **ETH secp256k1**: Skips RIPEMD160 for the Cosmos address (uses Keccak256 → Bech32). Ethereum unchanged.
