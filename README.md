@@ -1,128 +1,93 @@
 # Wallet Generator
 
-Generates keys and/or wallet addresses from a **mnemonic seed**, **private key**, or **public key**. Supports arbitrary HD paths as per BIP32/BIP44 standards and outputs Bech32 addresses for Cosmos SDK as well as proper (non-evmos) Ethereum address.
+Generate private keys, public keys, and wallet addresses from a **mnemonic seed**, **private key**, or **public key**. Supports arbitrary BIP32/BIP44 HD paths and outputs Bech32 (Cosmos SDK) and hex (Ethereum) addresses.
 
-Wallet applications love to gatekeep this. 
-You know who you are. 
-Stop it. Be better. 
+Wallet applications love to gatekeep this. You know who you are. Stop it. Be better.
 
 ## Features
 
-- Generate **private keys**, **public keys**, and **wallet addresses** from a **mnemonic seed**.
-- Generate **public keys** and **wallet addresses** from a **private key**.
-- Generate **wallet addresses** from a **public key** (supports both hex and base64 formats).
-- Accept **arbitrary HD derivation paths**.
-- Generate addresses for **Cosmos SDK chains** (Bech32) and **Ethereum** (Hex format).
-- Selectable **key type** for different address derivation methods (Canonical, ETH secp256k1, secp256k1).
+- Private key, public key, and address derivation from a **mnemonic seed**.
+- Public key and address derivation from a **private key**.
+- Address derivation from a **public key** (hex or base64).
+- Arbitrary **HD derivation paths**.
+- **Bech32** (Cosmos SDK) and **Ethereum** (hex) addresses.
+- Selectable key type (Canonical, ETH secp256k1, secp256k1).
 
-## Installation
+## Prerequisites
 
-1. Clone the repository:
+- [Bun](https://bun.sh)
+
+## Quickstart (CLI)
+
+Clone, install, and build:
 
 ```bash
 git clone https://github.com/cordtus/wallet_generator.git
 cd wallet_generator
+bun install
+bun run build
 ```
 
-2. Install dependencies:
+The `keygen` script is the non-interactive CLI. Secrets are read from environment variables or stdin (never argv, so they don't land in shell history).
+
+### Private key from a mnemonic
 
 ```bash
-yarn install
+MNEMONIC="your twelve twenty four word seed phrase here" \
+bun run keygen --mode mnemonic --style cosmos --prefix sei
 ```
 
-3. Build the project:
+### Wallet addresses from a public key
 
 ```bash
-yarn build
+PUBLIC_KEY=033303c7d61c8e8582de6ed52e6227408eb957abc98ef5759514cdac1bb5cd0a42 \
+bun run keygen --mode public-key --prefix sei
 ```
 
-4. Test:
+### Wallet addresses from a private key
 
 ```bash
-yarn test
+PRIVATE_KEY=8d5a5d5a... \
+bun run keygen --mode private-key --style evm --prefix cosmos
 ```
 
-5. Run:
+### Options
 
-```bash
-yarn start
-```
+| Option | Description | Default |
+| --- | --- | --- |
+| `--mode <mnemonic\|private-key\|public-key>` | Derivation mode (required) | — |
+| `--style <cosmos\|evm>` | Key type / address derivation | `cosmos` |
+| `--prefix <prefix>` | Bech32 prefix | `sei` |
+| `--path <path>` | HD derivation path (mnemonic only) | style default |
+| `--help` | Show help | — |
 
-## Usage
+The `evm` style defaults to the `m/44'/60'/0'/0/0` path with the ETH key type; `cosmos` defaults to `m/44'/118'/0'/0/0` with the Canonical key type.
 
-When you run the tool, you'll be prompted to select an input mode:
+## Interactive mode
 
-1. **Mnemonic**: Generate private key, public key, and wallet addresses from a mnemonic seed.
-2. **Private Key**: Generate public key and wallet addresses from a private key.
-3. **Public Key (Hex or Base64)**: Generate wallet addresses from a public key.
+Prefer a guided prompt? Run `bun run start` and select a mode (Mnemonic, Private Key, or Public Key), enter the derivation path, Bech32 prefix, and key type.
 
-### Example Usage
+### Key types
 
-#### Generating from a Mnemonic:
+- **Canonical** (default): `PublicKey → SHA256 → RIPEMD160 → Bech32` for Cosmos; `PublicKey → Keccak256 → last 20 bytes → Hex` for Ethereum.
+- **ETH secp256k1**: Skips RIPEMD160 for the Cosmos address (uses Keccak256 → Bech32). Ethereum unchanged.
+- **secp256k1**: Skips Keccak256 for the hex address (uses RIPEMD160 → Hex). Cosmos unchanged.
 
-```bash
-yarn start
+### Public key formats
 
-✔ Select input mode: Mnemonic
-✔ Enter your mnemonic: [your mnemonic here]
-✔ Enter the derivation path: m/44'/118'/0'/0/0
-```
+Hex (compressed) and base64 of the same key are both accepted:
 
-The tool will output:
-
-- **Bech32 Address**
-- **Ethereum (hex) Address**
-- **Public Key**
-- **Private Key**
-
-#### Generating from a Private Key:
-
-```bash
-yarn start
-
-✔ Select input mode: Private Key
-✔ Enter your private key: [your private key here]
-```
-
-The tool will output:
-
-- **Bech32 Address**
-- **Ethereum (hex) Address**
-- **Public Key**
-
-#### Generating from a Public Key:
-
-```bash
-yarn start
-
-✔ Select input mode: Public Key (Hex or Base64)
-✔ Enter your public key: [your public key in hex or base64 format]
-```
-
-The tool will output:
-
-- **Bech32 Address**
-- **Ethereum Address** (only when using hex format)
-
-### Public Key Format Examples
-
-Hex format (compressed):
 ```
 033303c7d61c8e8582de6ed52e6227408eb957abc98ef5759514cdac1bb5cd0a42
-```
-
-Base64 format (same key):
-```
 AzMDx9YcjoWC3m7VLmInQI65V6vJjvV1lRTNrBu1zQpC
 ```
 
-### Key Types
+## Development
 
-The tool supports three key types that control how addresses are derived. You'll be prompted to select one after entering your mnemonic, private key, or public key.
-
-- **Canonical** (default): `PublicKey → SHA256 → RIPEMD160 → Bech32` for the Cosmos address, and `PublicKey → Keccak256 → last 20 bytes → Hex` for the Ethereum address. This is the standard method used by most wallets.
-- **ETH secp256k1**: Skips RIPEMD160 for the Cosmos address, using the Keccak256 hash converted to Bech32 instead. The Ethereum address is unchanged.
-- **secp256k1**: Skips Keccak256 for the hex address, using the RIPEMD160 hash converted to hex instead. The Cosmos address is unchanged.
+```bash
+bun test        # run tests
+bun run lint    # lint and fix
+```
 
 ## Contributors
 
