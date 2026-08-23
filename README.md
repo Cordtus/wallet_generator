@@ -82,6 +82,12 @@ Hex (compressed) or base64:
 AzMDx9YcjoWC3m7VLmInQI65V6vJjvV1lRTNrBu1zQpC
 ```
 
+## Security
+
+All runtime dependencies are pinned to exact versions in `package.json` and the lockfile, so they cannot be silently updated. The critical operations (key derivation, hashing, curve math) use the `@noble/*`, `bip32`, `bip39`, `bech32`, and `@bitcoinerlab/*` libraries. We review the dependency tree with `bun audit` and keep it free of reachable known vulnerabilities.
+
+We cannot account for external dependencies being hijacked or compromised upstream, but as of **August 23, 2026** all runtime dependencies have been reviewed and no issues were found. This review applies only to the pinned versions in this repository; exercise caution before upgrading.
+
 ## Development
 
 ```bash
