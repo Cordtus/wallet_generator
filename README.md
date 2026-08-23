@@ -2,8 +2,6 @@
 
 Generate private keys, public keys, and wallet addresses from a **mnemonic seed**, **private key**, or **public key**. Supports arbitrary BIP32/BIP44 HD paths and outputs Bech32 (Cosmos SDK) and hex (Ethereum) addresses.
 
-Wallet applications love to gatekeep this. You know who you are. Stop it. Be better.
-
 ## Features
 
 - Private key, public key, and address derivation from a **mnemonic seed**.
@@ -17,7 +15,7 @@ Wallet applications love to gatekeep this. You know who you are. Stop it. Be bet
 
 - [Bun](https://bun.sh)
 
-## Quickstart (CLI)
+## Quickstart
 
 Clone, install, and build:
 
@@ -28,7 +26,13 @@ bun install
 bun run build
 ```
 
-The `keygen` script is the non-interactive CLI. Secrets are read from environment variables or stdin (never argv, so they don't land in shell history).
+### Interactive mode
+
+`bun run start` prompts for mode (Mnemonic, Private Key, Public Key), derivation path, Bech32 prefix, and key type.
+
+### CLI
+
+`bun run keygen` is the non-interactive CLI. Secrets are read from environment variables or stdin (never argv).
 
 ### Private key from a mnemonic
 
@@ -61,13 +65,9 @@ bun run keygen --mode private-key --style evm --prefix cosmos
 | `--path <path>` | HD derivation path (mnemonic only) | style default |
 | `--help` | Show help | — |
 
-The `evm` style defaults to the `m/44'/60'/0'/0/0` path with the ETH key type; `cosmos` defaults to `m/44'/118'/0'/0/0` with the Canonical key type.
+Style defaults: `evm` uses path `m/44'/60'/0'/0/0` with the ETH key type; `cosmos` uses `m/44'/118'/0'/0/0` with the Canonical key type.
 
-## Interactive mode
-
-Prefer a guided prompt? Run `bun run start` and select a mode (Mnemonic, Private Key, or Public Key), enter the derivation path, Bech32 prefix, and key type.
-
-### Key types
+## Key types
 
 - **Canonical** (default): `PublicKey → SHA256 → RIPEMD160 → Bech32` for Cosmos; `PublicKey → Keccak256 → last 20 bytes → Hex` for Ethereum.
 - **ETH secp256k1**: Skips RIPEMD160 for the Cosmos address (uses Keccak256 → Bech32). Ethereum unchanged.
@@ -75,12 +75,18 @@ Prefer a guided prompt? Run `bun run start` and select a mode (Mnemonic, Private
 
 ### Public key formats
 
-Hex (compressed) and base64 of the same key are both accepted:
+Hex (compressed) or base64:
 
 ```
 033303c7d61c8e8582de6ed52e6227408eb957abc98ef5759514cdac1bb5cd0a42
 AzMDx9YcjoWC3m7VLmInQI65V6vJjvV1lRTNrBu1zQpC
 ```
+
+## Security
+
+All runtime dependencies are pinned to exact versions in `package.json` and the lockfile, so they cannot be silently updated. The critical operations (key derivation, hashing, curve math) use the `@noble/*`, `bip32`, `bip39`, `bech32`, and `@bitcoinerlab/*` libraries. We review the dependency tree with `bun audit` and keep it free of reachable known vulnerabilities.
+
+We cannot account for external dependencies being hijacked or compromised upstream, but as of **August 23, 2026** all runtime dependencies have been reviewed and no issues were found. This review applies only to the pinned versions in this repository; exercise caution before upgrading.
 
 ## Development
 
