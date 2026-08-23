@@ -13,6 +13,7 @@ Stop it. Be better.
 - Generate **wallet addresses** from a **public key** (supports both hex and base64 formats).
 - Accept **arbitrary HD derivation paths**.
 - Generate addresses for **Cosmos SDK chains** (Bech32) and **Ethereum** (Hex format).
+- Selectable **key type** for different address derivation methods (Canonical, ETH secp256k1, secp256k1).
 
 ## Installation
 
@@ -114,6 +115,14 @@ Base64 format (same key):
 ```
 AzMDx9YcjoWC3m7VLmInQI65V6vJjvV1lRTNrBu1zQpC
 ```
+
+### Key Types
+
+The tool supports three key types that control how addresses are derived. You'll be prompted to select one after entering your mnemonic, private key, or public key.
+
+- **Canonical** (default): `PublicKey → SHA256 → RIPEMD160 → Bech32` for the Cosmos address, and `PublicKey → Keccak256 → last 20 bytes → Hex` for the Ethereum address. This is the standard method used by most wallets.
+- **ETH secp256k1**: Skips RIPEMD160 for the Cosmos address, using the Keccak256 hash converted to Bech32 instead. The Ethereum address is unchanged.
+- **secp256k1**: Skips Keccak256 for the hex address, using the RIPEMD160 hash converted to hex instead. The Cosmos address is unchanged.
 
 ## Contributors
 
