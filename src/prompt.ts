@@ -29,6 +29,30 @@ const isLikelyBase64 = (pubkey: string): boolean => {
 	return /^[A-Za-z0-9+/=]+$/.test(pubkey) && !/^[0-9a-fA-F]+$/.test(pubkey)
 }
 
+/**
+ * Prompt the user to select an address derivation key type.
+ * @returns The selected {@link KeyType}.
+ */
+const selectKeyType = (): Promise<KeyType> => {
+	return select({
+		message: "Select key type:",
+		choices: [
+			{
+				name: "Canonical (both addresses properly hashed)",
+				value: KeyType.CANONICAL
+			},
+			{
+				name: "ETH secp256k1 (skip RIPEMD160 for cosmos)",
+				value: KeyType.ETH_SECP256K1
+			},
+			{
+				name: "secp256k1 (skip keccak for hex)",
+				value: KeyType.SECP256K1
+			}
+		]
+	})
+}
+
 export const promptUser = async (): Promise<void> => {
 	const mode = await select({
 		message: "Select input mode:",
@@ -54,12 +78,15 @@ export const promptUser = async (): Promise<void> => {
 			default: "sei"
 		})
 
+		const keyType = await selectKeyType()
+
 		const privateKeyHex = Buffer.from(
 			getPrivateKeyFromMnemonic(mnemonic, derivationPath)
 		).toString("hex")
 		const { address, ethAddress, publicKey, privateKey } = generateAddressesFromPrivateKey(
 			privateKeyHex,
-			prefix
+			prefix,
+			keyType
 		)
 		console.log(`${prefix.charAt(0).toUpperCase() + prefix.slice(1)} Address: ${address}`)
 		console.log(`Ethereum Address: ${ethAddress}`)
@@ -75,12 +102,14 @@ export const promptUser = async (): Promise<void> => {
 			default: "sei"
 		})
 
+		const keyType = await selectKeyType()
+
 		const {
 			address,
 			ethAddress,
 			publicKey,
 			privateKey: privKey
-		} = generateAddressesFromPrivateKey(privateKey, prefix)
+		} = generateAddressesFromPrivateKey(privateKey, prefix, keyType)
 		console.log(`${prefix.charAt(0).toUpperCase() + prefix.slice(1)} Address: ${address}`)
 		console.log(`Ethereum Address: ${ethAddress}`)
 		console.log(`Private Key: ${privKey}`)
@@ -110,8 +139,10 @@ export const promptUser = async (): Promise<void> => {
 			default: "sei"
 		})
 
+		const keyType = await selectKeyType()
+
 		const publicKeyBytes = Uint8Array.from(Buffer.from(publicKeyHex, "hex"))
-		const { address } = generateAddressesFromPublicKey(publicKeyBytes, prefix)
+		const { address } = generateAddressesFromPublicKey(publicKeyBytes, prefix, keyType)
 		console.log(`${prefix.charAt(0).toUpperCase() + prefix.slice(1)} Address: ${address}`)
 	}
 }

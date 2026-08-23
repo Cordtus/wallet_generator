@@ -55,6 +55,7 @@
 		}
 	},
 	"javascript": {
+		"globals": ["Bun"],
 		"formatter": {
 			"arrowParentheses": "always",
 			"quoteStyle": "double",
