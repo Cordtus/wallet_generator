@@ -1,5 +1,9 @@
 import { select } from "@inquirer/prompts"
-import { generateAddressesFromPrivateKey, generateAddressesFromPublicKey } from "./utils/crypto.js"
+import {
+	KeyType,
+	generateAddressesFromPrivateKey,
+	generateAddressesFromPublicKey
+} from "./utils/crypto.js"
 import { getPrivateKeyFromMnemonic } from "./utils/mnemonic.js"
 import {
 	derivationPathSchema,
